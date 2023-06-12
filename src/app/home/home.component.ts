@@ -6,8 +6,12 @@ import { ProductService } from '../services/product-service';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  constructor(private productService: ProductService) {
-    let products = productService.getAllProducts();
-    console.log(products);
+  products: any;
+  products$: any;
+
+  constructor(private productService: ProductService) {}
+
+  ngOnInit(): void {
+    this.products$ = this.productService.getAllProducts();
   }
 }
