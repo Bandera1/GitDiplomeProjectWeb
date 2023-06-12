@@ -4590,6 +4590,7 @@ input[type="button"].btn-block {
   color: #FFD333;
   background-color: #fff;
   border: 1px solid #dee2e6;
+  cursor: context-menu;
 }
 
 .page-link:hover {

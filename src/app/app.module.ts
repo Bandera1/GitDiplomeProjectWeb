@@ -7,6 +7,7 @@ import { ProductService } from './services/product-service';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { ProducerService } from './services/producer-service';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -20,7 +21,7 @@ import { HomeComponent } from './home/home.component';
       // { path: 'fetch-data', component: FetchDataComponent },
     ]),
   ],
-  providers: [ProductService],
+  providers: [ProductService, ProducerService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
