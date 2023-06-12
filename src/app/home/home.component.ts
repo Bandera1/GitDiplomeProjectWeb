@@ -21,7 +21,7 @@ export class HomeComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadAllProduct();
+    this.loadAllProduct(this.currentPage - 1, this.showProductCount);
 
     this.route.params.subscribe((params) => {
       this.currentPage = +params['id']; // (+) converts string 'id' to a number
@@ -36,7 +36,7 @@ export class HomeComponent {
     return array;
   }
 
-  loadAllProduct() {
+  loadAllProduct(from: number, count: number) {
     this.products$ = this.productService.getAllProducts(
       this.currentPage - 1,
       this.showProductCount
@@ -71,5 +71,11 @@ export class HomeComponent {
     }
 
     console.log('Pagination - ' + this.paginationValues);
+  }
+
+  changePage(page: number) {
+    this.paginationValues = []; //  clear previous pagination
+    this.currentPage = page;
+    this.loadAllProduct((page - 1) * this.showProductCount, this.showProductCount);
   }
 }
