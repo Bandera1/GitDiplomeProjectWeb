@@ -1541,6 +1541,12 @@ pre code {
   border-top: 1px solid #dee2e6;
 }
 
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 600px);
+  grid-template-rows: 200px 188px;
+}
+
 .table thead th {
   vertical-align: bottom;
   border-bottom: 2px solid #dee2e6;
@@ -9159,7 +9165,7 @@ button.bg-dark:focus {
 .text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: break-spaces;
 }
 
 .text-left {

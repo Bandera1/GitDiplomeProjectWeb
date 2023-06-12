@@ -57,16 +57,13 @@ export class HomeComponent {
 
   calculatePagination(productCount: number) {
     this.maxPages = Math.ceil(+(productCount / this.showProductCount));
-    this.maxPages = 20;
-    this.currentPage = 1;
-    let startPosition = this.currentPage;
+    let startPosition = this.currentPage - 1;
+
 
     if (this.currentPage === 1 || this.currentPage === 2) {
       startPosition = 1;
-    } else if (this.maxPages - this.currentPage === 1) {
-      startPosition -= 1;
     } else if (this.maxPages - this.currentPage === 0) {
-      startPosition -= 2;
+      startPosition -= 1;
     }
 
     for (let i = startPosition - 1; i < startPosition + 2; i++) {
