@@ -10,7 +10,7 @@
 /node_modules
 
 # IDEs and editors
-.angular/cache/
+/.angular/cache
 /.idea
 .project
 .classpath
