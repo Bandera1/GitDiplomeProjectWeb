@@ -71,7 +71,8 @@
       <div class="col-lg-4 col-6 text-left">
         <form action="">
           <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search by article">
+            <input type="text" class="form-control" (input)="searchByNameHandler($event.target)"
+              placeholder="Search by article">
             <div class="input-group-append">
               <span class="input-group-text bg-transparent text-primary">
                 <i class="fa fa-search"></i>
@@ -184,8 +185,9 @@
           </div>
           <form *ngFor="let producer of producers$ | async">
             <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-              <input type="checkbox" class="custom-control-input" id="color-{{producer.name}}">
-              <label class="custom-control-label" for="color-{{producer.name}}">{{producer.name}}</label>
+              <input type="checkbox"  class="custom-control-input" id="color-{{producer.name}}">
+              <label class="custom-control-label" (click)="setProducer(producer.name)"
+                for="color-{{producer.name}}">{{producer.name}}</label>
             </div>
           </form>
         </div>
@@ -195,23 +197,6 @@
       <!-- Shop Product Start -->
       <div class="col-lg-9 col-md-8" style="min-height: 98rem;">
         <div class="row pb-3">
-          <!-- <div class="col-12 pb-1">
-             <div class="d-flex align-items-center justify-content-between mb-4">
-               <div>
-               </div>
-               <div class="ml-2">
-                 <div class="btn-group ml-2">
-                   <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                     data-toggle="dropdown">Showing</button>
-                   <div class="dropdown-menu dropdown-menu-right">
-                     <a class="dropdown-item" href="#">10</a>
-                     <a class="dropdown-item" href="#">20</a>
-                     <a class="dropdown-item" href="#">30</a>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div> -->
           <div class="col-lg-4 col-md-6 col-sm-6 pb-1" *ngFor="let item of products$ | async">
             <div class="product-item bg-light mb-4">
               <div class="product-img position-relative overflow-hidden">

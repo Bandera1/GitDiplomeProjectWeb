@@ -32,6 +32,10 @@ export class HomeComponent {
       this.currentPage = +params['id']; // (+) converts string 'id' to a number
       this.changePage(this.currentPage);
     });
+
+    this.productCount$ = this.productService
+      .getProductCount()
+      .subscribe((val) => {});
   }
 
   addDecimalToPrice(array: any): any {
@@ -42,18 +46,16 @@ export class HomeComponent {
     return array;
   }
 
-  loadAllProduct(from: number, count: number) {
+  loadAllProduct(from: number, count: number, name = '0') {
     this.products$ = this.productService.getAllProducts(
       this.currentPage - 1,
-      this.showProductCount
+      this.showProductCount,
+      '0',
+      name
     );
 
-    this.productCount$ = this.productService
-      .getProductCount()
-      .subscribe((val) => {
-        this.calculatePagination(+val);
-      });
 
+    this.calculatePagination(+this.productCount$);
     this.products$ = this.products$.pipe(
       map((val: any) => {
         return this.addDecimalToPrice(val);
@@ -94,11 +96,31 @@ export class HomeComponent {
   }
 
   setProducer(producer: any) {
-    console.log("producer - " + producer)
+    if (this.currentProducers.includes(producer)) {
+      this.removeProducer(producer);
+      return;
+    }
+    console.log('Add producer: ' + producer);
     this.currentProducers.push(producer);
   }
 
   removeProducer(producer: string) {
-    this.currentProducers.slice(this.currentProducers.indexOf(producer), 1);
+    this.currentProducers = this.currentProducers.slice(this.currentProducers.indexOf(producer), 1);
+    console.log("Remove producer: " + producer);
+  }
+
+  searchByNameHandler(eventTarget: any) {
+    if (!eventTarget.value) {
+      this.loadAllProduct(this.currentPage - 1, this.showProductCount);
+      return;
+    }
+
+    console.log('Search -' + eventTarget.value);
+
+    this.loadAllProduct(
+      this.currentPage - 1,
+      this.showProductCount,
+      eventTarget.value
+    );
   }
 }

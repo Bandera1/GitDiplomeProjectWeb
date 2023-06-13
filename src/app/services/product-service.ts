@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product.model';
 
@@ -7,10 +7,16 @@ import { Product } from '../models/product.model';
 })
 export class ProductService {
   constructor(private http: HttpClient) {}
+  headers = new HttpHeaders();
 
-  getAllProducts(from: number, count:number) {
+  ngOnInit() {
+    this.headers = this.headers.set('content-type', 'charset=UTF-8');
+  }
+
+  getAllProducts(from: number, count:number, producerId = '0', name = '0') {
     return this.http.get<Product>(
-      `https://localhost:7251/api/Product/GetAllProducts/${from}/${count}`
+      `https://localhost:7251/api/Product/GetAllProducts/${from}/${count}/${producerId}/${name}`,
+      {headers: this.headers}
     );
   }
 
