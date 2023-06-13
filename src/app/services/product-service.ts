@@ -13,10 +13,10 @@ export class ProductService {
     this.headers = this.headers.set('content-type', 'charset=UTF-8');
   }
 
-  getAllProducts(from: number, count:number, producerId = '0', name = '0') {
+  getAllProducts(from: number, count: number, categoryId = '0', name = '0', producer = '0') {
     return this.http.get<Product>(
-      `https://localhost:7251/api/Product/GetAllProducts/${from}/${count}/${producerId}/${name}`,
-      {headers: this.headers}
+      `https://localhost:7251/api/Product/GetAllProducts/${from}/${count}/${categoryId}/${name}/${producer}`,
+      { headers: this.headers }
     );
   }
 
