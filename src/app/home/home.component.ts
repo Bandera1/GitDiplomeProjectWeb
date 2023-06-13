@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../services/product-service';
 import { ProducerService } from '../services/producer-service';
-import { find, map, take } from 'rxjs';
+import { map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from '../services/category-service';
+import { ShoppingCartModel } from '../models/shopping-cart.model'
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,7 @@ export class HomeComponent {
   currentCategory = '';
   currentProducerId = '';
   shoppingCartCount = 0;
+  shoppingCard: ShoppingCartModel[] = [];
 
   constructor(
     private productService: ProductService,
@@ -43,7 +45,10 @@ export class HomeComponent {
 
     this.productCount$ = this.productService.getProductCount();
 
-    localStorage.setItem('shoppingCartCount', this.shoppingCartCount.toString());
+    localStorage.setItem(
+      'shoppingCartCount',
+      this.shoppingCartCount.toString()
+    );
   }
 
   addDecimalToPrice(array: any): any {
@@ -163,17 +168,33 @@ export class HomeComponent {
 
   addProductToShoppingCart(productId: string) {
     let selectedProduct;
+    let checkProduct = this.shoppingCard.filter(x => { return x['id'] === productId;});
+
+    if (checkProduct.length !== 0) {
+      this.shoppingCard.forEach((element, index) => {
+        if (element.id === productId) {
+          element.quantity++;
+        }
+      });
+
+      localStorage.setItem('shoppingCart', JSON.stringify(this.shoppingCard));
+      return;
+    }
+
     this.products$.subscribe((value: any[]) => {
       selectedProduct = value.find((x) => x.id === productId);
-      let jsonData = {
+      let jsonData: ShoppingCartModel = {
         id: selectedProduct.id,
         name: selectedProduct.name,
         price: selectedProduct.price,
         quantity: 1,
-        base64Photo: selectedProduct.PhotoBase64
+        base64Photo: selectedProduct.PhotoBase64,
       };
 
-      localStorage.setItem('shoppingCartCount', (this.shoppingCartCount++).toString());
+      this.shoppingCard.push(jsonData);
+      localStorage.setItem('shoppingCartCount',
+        (this.shoppingCartCount++).toString());
+       localStorage.setItem('shoppingCart', JSON.stringify(this.shoppingCard));
     });
   }
 }

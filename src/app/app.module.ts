@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ProducerService } from './services/producer-service';
 import { CategoryService } from './services/category-service';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
@@ -16,13 +17,13 @@ import { CategoryService } from './services/category-service';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: ':id', component: HomeComponent, pathMatch: 'full' },
-      // { path: 'counter', component: CounterComponent },
-      // { path: 'fetch-data', component: FetchDataComponent },
+      // { path: '', redirectTo: '/home/1' },
+      { path: 'home/:id', component: HomeComponent, pathMatch: 'full' },
+      { path: 'cart', component: ShoppingCartComponent },
+      { path: '**', redirectTo: '/home/1' },
     ]),
   ],
   providers: [ProductService, ProducerService, CategoryService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-
