@@ -4,4 +4,6 @@ export interface ShoppingCartModel {
   price: number;
   quantity: number;
   base64Photo: string;
+  totalPrice: number;
+  priceForOne: number;
 }

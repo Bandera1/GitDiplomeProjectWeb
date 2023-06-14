@@ -11,13 +11,12 @@ import { ProducerService } from './services/producer-service';
 import { CategoryService } from './services/category-service';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 @NgModule({
-  declarations: [AppComponent, HomeComponent],
+  declarations: [AppComponent, HomeComponent, ShoppingCartComponent],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      // { path: '', redirectTo: '/home/1' },
       { path: 'home/:id', component: HomeComponent, pathMatch: 'full' },
       { path: 'cart', component: ShoppingCartComponent },
       { path: '**', redirectTo: '/home/1' },

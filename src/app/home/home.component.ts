@@ -174,6 +174,7 @@ export class HomeComponent {
       this.shoppingCard.forEach((element, index) => {
         if (element.id === productId) {
           element.quantity++;
+          element.totalPrice = element.quantity * element.price;
         }
       });
 
@@ -188,7 +189,9 @@ export class HomeComponent {
         name: selectedProduct.name,
         price: selectedProduct.price,
         quantity: 1,
-        base64Photo: selectedProduct.PhotoBase64,
+        base64Photo: selectedProduct.photoBase64,
+        totalPrice: Math.floor(selectedProduct.price),
+        priceForOne: Math.floor(selectedProduct.price),
       };
 
       this.shoppingCard.push(jsonData);
