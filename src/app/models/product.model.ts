@@ -10,4 +10,5 @@ export interface Product {
   weightInKilogram: number;
   photoPath: string;
   description: string;
+  photoBase64: string;
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ShoppingCartModel } from '../models/shopping-cart.model';
-import { CouponModel } from '../models/coupon-model';
+import { LocalStorageService } from '../services/local-storage.service';
+import { Product } from '../models/product.model';
 
 @Component({
   selector: 'shopping-cart',
@@ -11,17 +12,11 @@ export class ShoppingCartComponent {
   totalPriceForAllPurchase = 0;
   shippingPrice = 70;
 
-  constructor() {
-  }
+  constructor(private localStorageService: LocalStorageService) {}
 
   ngOnInit() {
-    this.purchases = localStorage.getItem('shoppingCart');
-    if (this.purchases != null) {
-      this.purchases = JSON.parse(this.purchases);
-      console.log(this.purchases);
-    }
-
-    this.calculateTotalPrice()
+    this.purchases = this.localStorageService.getShoppingCart();
+    this.calculateTotalPrice();
   }
 
   increaseQuantity(purchaseId: string) {
@@ -37,22 +32,25 @@ export class ShoppingCartComponent {
     this.purchases[this.purchases.find((x: any) => x.id == purchaseId)] =
       purchase;
 
-      this.calculateTotalPrice();
+    this.calculateTotalPrice();
   }
 
   decreaseQuantity(purchaseId: string) {
-    let purchase = (this.purchases as ShoppingCartModel[]).find((x) => x.id == purchaseId);
+    let purchase = (this.purchases as ShoppingCartModel[]).find(
+      (x) => x.id == purchaseId
+    );
     if (!purchase) {
       return;
     }
 
-    if(purchase.quantity <= 0) {
+    if (purchase.quantity <= 0) {
       return;
     }
 
     purchase.quantity--;
     purchase.totalPrice -= purchase.priceForOne;
-    this.purchases[this.purchases.find((x: any) => x.id == purchaseId)] = purchase;
+    this.purchases[this.purchases.find((x: any) => x.id == purchaseId)] =
+      purchase;
 
     this.calculateTotalPrice();
   }
@@ -60,26 +58,18 @@ export class ShoppingCartComponent {
   calculateTotalPrice() {
     this.totalPriceForAllPurchase = 0;
 
-    (this.purchases as ShoppingCartModel[]).forEach(x => {
-      this.totalPriceForAllPurchase += x.totalPrice
+    (this.purchases as ShoppingCartModel[]).forEach((x) => {
+      this.totalPriceForAllPurchase += x.totalPrice;
     });
 
-    if(this.totalPriceForAllPurchase <= 1) {
-      return
+    if (this.totalPriceForAllPurchase <= 1) {
+      return;
     }
     this.totalPriceForAllPurchase += this.shippingPrice;
   }
 
-  removePurchase(purchaseId: string) {
-    this.purchases = this.purchases.filter(function (item: ShoppingCartModel) {
-      return item.id !== purchaseId;
-    });
-
-    localStorage.setItem('shoppingCart', JSON.stringify(this.purchases));
+  removePurchase(purchase: Product) {
+    this.purchases = this.localStorageService.removeFromShoppingCart(purchase);
     this.calculateTotalPrice();
-  }
-
-  enterCoupon(coupon: string) {
-
   }
 }

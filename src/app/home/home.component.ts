@@ -5,6 +5,8 @@ import { map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from '../services/category-service';
 import { ShoppingCartModel } from '../models/shopping-cart.model'
+import { LocalStorageService } from '../services/local-storage.service';
+import { Product } from '../models/product.model';
 
 @Component({
   selector: 'app-home',
@@ -30,7 +32,8 @@ export class HomeComponent {
     private productService: ProductService,
     private route: ActivatedRoute,
     private producerService: ProducerService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -133,18 +136,11 @@ export class HomeComponent {
     );
   }
 
-  // removeProducer(producer: string) {
-  //   this.currentProducers = this.currentProducers.slice(this.currentProducers.indexOf(producer), 1);
-  //   console.log("Remove producer: " + producer);
-  // }
-
   searchByNameHandler(eventTarget: any) {
     if (!eventTarget.value) {
       this.loadAllProduct(this.currentPage - 1, this.showProductCount);
       return;
     }
-
-    console.log('Search -' + eventTarget.value);
 
     this.loadAllProduct(
       this.currentPage - 1,
@@ -166,38 +162,8 @@ export class HomeComponent {
     this.loadAllProduct(this.currentPage - 1, this.showProductCount, category);
   }
 
-  addProductToShoppingCart(productId: string) {
-    let selectedProduct;
-    let checkProduct = this.shoppingCard.filter(x => { return x['id'] === productId;});
-
-    if (checkProduct.length !== 0) {
-      this.shoppingCard.forEach((element, index) => {
-        if (element.id === productId) {
-          element.quantity++;
-          element.totalPrice = element.quantity * element.price;
-        }
-      });
-
-      localStorage.setItem('shoppingCart', JSON.stringify(this.shoppingCard));
-      return;
-    }
-
-    this.products$.subscribe((value: any[]) => {
-      selectedProduct = value.find((x) => x.id === productId);
-      let jsonData: ShoppingCartModel = {
-        id: selectedProduct.id,
-        name: selectedProduct.name,
-        price: selectedProduct.price,
-        quantity: 1,
-        base64Photo: selectedProduct.photoBase64,
-        totalPrice: Math.floor(selectedProduct.price),
-        priceForOne: Math.floor(selectedProduct.price),
-      };
-
-      this.shoppingCard.push(jsonData);
-      localStorage.setItem('shoppingCartCount',
-        (this.shoppingCartCount++).toString());
-       localStorage.setItem('shoppingCart', JSON.stringify(this.shoppingCard));
-    });
+  addProductToShoppingCart(product: Product) {
+    this.localStorageService.addToShoppingCart(product);
+    this.shoppingCartCount = this.localStorageService.getShoppingCartCount();
   }
 }

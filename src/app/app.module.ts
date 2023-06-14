@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { ProducerService } from './services/producer-service';
 import { CategoryService } from './services/category-service';
 import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { LocalStorageService } from './services/local-storage.service';
 @NgModule({
   declarations: [AppComponent, HomeComponent, ShoppingCartComponent],
   imports: [
@@ -22,7 +23,12 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
       { path: '**', redirectTo: '/home/1' },
     ]),
   ],
-  providers: [ProductService, ProducerService, CategoryService],
+  providers: [
+    ProductService,
+    ProducerService,
+    CategoryService,
+    LocalStorageService,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
