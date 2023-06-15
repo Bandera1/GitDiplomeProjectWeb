@@ -42,16 +42,12 @@ export class HomeComponent {
     this.loadAllCategories();
 
     this.route.params.subscribe((params) => {
-      this.currentPage = +params['id']; // (+) converts string 'id' to a number
+      this.currentPage = +params['page']; // (+) converts string 'id' to a number
       this.changePage(this.currentPage);
     });
 
     this.productCount$ = this.productService.getProductCount();
-
-    localStorage.setItem(
-      'shoppingCartCount',
-      this.shoppingCartCount.toString()
-    );
+    this.shoppingCartCount = this.localStorageService.getShoppingCartCount();
   }
 
   addDecimalToPrice(array: any): any {
@@ -163,7 +159,15 @@ export class HomeComponent {
   }
 
   addProductToShoppingCart(product: Product) {
-    this.localStorageService.addToShoppingCart(product);
+    this.localStorageService.addToShoppingCart({
+      id: product.id,
+      base64Photo: product.photoBase64,
+      name: product.name,
+      price: product.price,
+      priceForOne: product.price,
+      quantity: 1,
+      totalPrice: product.price
+    });
     this.shoppingCartCount = this.localStorageService.getShoppingCartCount();
   }
 }

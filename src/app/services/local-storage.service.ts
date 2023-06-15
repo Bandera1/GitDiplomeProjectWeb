@@ -21,45 +21,32 @@ export class LocalStorageService {
     return localStorage.getItem(key);
   }
 
-  addToShoppingCart(model: Product): void {
-    let checkProduct = this.shoppingCart.filter((x: ShoppingCartModel) => {
-      return x['id'] === model.id;
+  addToShoppingCart(model: ShoppingCartModel): void {
+    this.updateLocalCache();
+
+    let checkProduct = this.shoppingCart.find((x: ShoppingCartModel) => {
+      return x.id === model.id;
     });
 
-    if (checkProduct.length !== 0) {
-      // IF PRODUCT ALREADY IN SHOPPING CART
-      this.shoppingCart.forEach((element: ShoppingCartModel) => {
-        if (element.id === model.id) {
-          element.quantity++;
-          element.totalPrice = element.quantity * element.price;
-        }
-      });
-
-      localStorage.setItem(
-        SHOPPING_CART_KEY,
-        JSON.stringify(this.shoppingCart)
-      );
-
-      this.updateLocalCache();
+    if (checkProduct) { // IF PRODUCT ALREADY IN SHOPPING CART
       return;
     }
 
     let jsonData: ShoppingCartModel = {
-      id: model.id,
-      name: model.name,
-      price: model.price,
-      quantity: 1,
-      base64Photo: model.photoBase64,
+      ...model,
       totalPrice: Math.floor(model.price),
       priceForOne: Math.floor(model.price),
     };
 
     this.shoppingCart.push(jsonData);
     localStorage.setItem(
+      SHOPPING_CART_KEY,
+      JSON.stringify(this.shoppingCart)
+    );
+    localStorage.setItem(
       SHOPPING_CART_COUNT,
       (this.getShoppingCartCount() + 1).toString()
     );
-    localStorage.setItem(SHOPPING_CART_KEY, JSON.stringify(this.shoppingCart));
 
     this.updateLocalCache();
   }
@@ -76,21 +63,19 @@ export class LocalStorageService {
   }
 
   removeFromShoppingCart(model: Product): ShoppingCartModel[] {
-    this.shoppingCart = this.shoppingCart.filter(function (item: ShoppingCartModel) {
+    this.shoppingCart = this.shoppingCart.filter((item: ShoppingCartModel) => {
       return item.id !== model.id;
     });
 
-    localStorage.setItem(
-      SHOPPING_CART_KEY,
-      JSON.stringify(this.shoppingCart)
-    );
+    localStorage.setItem( SHOPPING_CART_KEY, JSON.stringify(this.shoppingCart));
+    localStorage.setItem(SHOPPING_CART_COUNT, (this.getShoppingCartCount() - 1).toString());
+
     this.updateLocalCache();
 
     return this.shoppingCart;
   }
 
   getShoppingCartCount(): number {
-    console.log(Number(localStorage.getItem(SHOPPING_CART_COUNT)));
     return Number(localStorage.getItem(SHOPPING_CART_COUNT));
   }
 
